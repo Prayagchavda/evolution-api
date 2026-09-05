@@ -2209,7 +2209,19 @@ export class BaileysStartupService extends ChannelStartupService {
           { userJid: this.instance.wuid },
         );
         waMsg.key.participant = undefined;
-        await this.client.relayMessage(sender, waMsg.message, { messageId: waMsg.key.id });
+        await this.client.relayMessage(
+          sender,
+          waMsg.message,
+          {
+            messageId: waMsg.key.id,
+            additionalNodes: [
+              {
+                tag: 'meta',
+                attrs: { is_newsletter: 'true' },
+              },
+            ],
+          } as any,
+        );
         return waMsg;
       }
 
