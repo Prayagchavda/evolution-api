@@ -3527,7 +3527,7 @@ export class BaileysStartupService extends ChannelStartupService {
       }
       return { warning: 'newsletterMetadata method not available on client' };
     } catch (error) {
-      this.logger.error(`Error getting newsletter metadata for ${jid}:`, error);
+      this.logger.error(`Error getting newsletter metadata for ${jid}: ${error?.toString() || error}`);
       return { error: error?.toString() || error };
     }
   }
