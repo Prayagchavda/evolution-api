@@ -3520,8 +3520,22 @@ export class BaileysStartupService extends ChannelStartupService {
   // Newsletter Metadata Check
   public async getNewsletterMetadata(jid: string) {
     try {
-      if (typeof (this.client as any).newsletterMetadata === 'function') {
-        const metadata = await (this.client as any).newsletterMetadata('jid', jid);
+      const clientAny = this.client as any;
+      if (typeof clientAny.newsletterMetadata === 'function') {
+        let metadata: any = null;
+        try {
+          metadata = await clientAny.newsletterMetadata('jid', jid);
+        } catch (e1) {
+          try {
+            metadata = await clientAny.newsletterMetadata(jid);
+          } catch (e2) {
+            try {
+              metadata = await clientAny.newsletterMetadata('invite', jid);
+            } catch (e3) {
+              return { error: `All newsletterMetadata overloads failed: ${e3?.toString()}` };
+            }
+          }
+        }
         this.logger.verbose(`Newsletter Metadata: ${JSON.stringify(metadata)}`);
         return metadata;
       }
