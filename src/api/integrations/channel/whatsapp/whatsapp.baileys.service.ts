@@ -2303,7 +2303,7 @@ export class BaileysStartupService extends ChannelStartupService {
     this.logger.verbose(`Sending message to ${sender}`);
 
     try {
-      if (options?.delay) {
+      if (options?.delay && !sender.includes('@newsletter')) {
         this.logger.verbose(`Typing for ${options.delay}ms to ${sender}`);
         if (options.delay > 20000) {
           let remainingDelay = options.delay;
@@ -2641,12 +2641,13 @@ export class BaileysStartupService extends ChannelStartupService {
       throw new BadRequestException('Text is required');
     }
 
+    const isNewsletter = data.number?.includes('@newsletter');
     return await this.sendMessageWithTyping(
       data.number,
       { conversation: data.text },
       {
         delay: data?.delay,
-        presence: 'composing',
+        presence: isNewsletter ? undefined : 'composing',
         quoted: data?.quoted,
         linkPreview: data?.linkPreview,
         mentionsEveryOne: data?.mentionsEveryOne,
