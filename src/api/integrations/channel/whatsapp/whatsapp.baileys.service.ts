@@ -2195,15 +2195,25 @@ export class BaileysStartupService extends ChannelStartupService {
     }
 
     if (sender.includes('@newsletter')) {
-      const content =
+      const textContent =
         typeof message === 'object' && (message['text'] || message['conversation'])
-          ? { text: message['text'] || message['conversation'] }
-          : message;
-      const newsletterOptions: MiscMessageGenerationOptions = quoted ? { quoted } : {};
+          ? (message['text'] || message['conversation'])
+          : null;
+
+      if (textContent) {
+        const waMsg = generateWAMessageFromContent(
+          sender,
+          { conversation: textContent },
+          { userJid: this.instance.wuid },
+        );
+        await this.client.relayMessage(sender, waMsg.message, { messageId: waMsg.key.id });
+        return waMsg;
+      }
+
       return await this.client.sendMessage(
         sender,
-        content as unknown as AnyMessageContent,
-        newsletterOptions,
+        message as unknown as AnyMessageContent,
+        quoted ? { quoted } : {},
       );
     }
 
