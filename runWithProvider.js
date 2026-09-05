@@ -8,6 +8,8 @@ let { DATABASE_PROVIDER } = process.env;
 DATABASE_PROVIDER = (DATABASE_PROVIDER || '').trim(); // normalize whitespace
 const databaseProviderDefault = DATABASE_PROVIDER !== '' ? DATABASE_PROVIDER : 'postgresql';
 
+process.env.PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK = '1';
+
 if (process.env.DATABASE_URL && (!process.env.DATABASE_CONNECTION_URI || process.env.DATABASE_CONNECTION_URI === '')) {
   process.env.DATABASE_CONNECTION_URI = process.env.DATABASE_URL;
 }
