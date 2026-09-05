@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: evolution-api
+    runtime: docker
+    region: ohio
+    plan: starter
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: AUTHENTICATION_API_KEY
+        generateValue: true
+      - key: SERVER_URL
+        value: https://evolution-api.onrender.com
+      - key: DATABASE_ENABLED
+        value: false
+      - key: LOG_LEVEL
+        value: ERROR,WARN,DEBUG,INFO
+      - key: LOG_COLOR
+        value: true
+      - key: DEL_INSTANCE
+        value: false
+      - key: STORE_MESSAGES
+        value: true
+      - key: STORE_CONTACTS
+        value: true
+      - key: STORE_CHATS
+        value: true
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: CORS_METHODS
+        value: POST,GET,PUT,DELETE
+      - key: CORS_CREDENTIALS
+        value: true
+    healthCheckPath: /
