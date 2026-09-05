@@ -3521,25 +3521,35 @@ export class BaileysStartupService extends ChannelStartupService {
   public async getNewsletterMetadata(jid: string) {
     try {
       const clientAny = this.client as any;
+      const clientMethods = Object.keys(clientAny).filter((k) => typeof clientAny[k] === 'function');
+      const newsletterMethods = clientMethods.filter((k) => k.toLowerCase().includes('newsletter'));
+
+      let metadata: any = null;
+      let lastError: string | null = null;
+
       if (typeof clientAny.newsletterMetadata === 'function') {
-        let metadata: any = null;
         try {
           metadata = await clientAny.newsletterMetadata('jid', jid);
         } catch (e1) {
-          try {
-            metadata = await clientAny.newsletterMetadata(jid);
-          } catch (e2) {
-            try {
-              metadata = await clientAny.newsletterMetadata('invite', jid);
-            } catch (e3) {
-              return { error: `All newsletterMetadata overloads failed: ${e3?.toString()}` };
-            }
-          }
+          lastError = e1?.toString() || String(e1);
         }
-        this.logger.verbose(`Newsletter Metadata: ${JSON.stringify(metadata)}`);
-        return metadata;
       }
-      return { warning: 'newsletterMetadata method not available on client' };
+
+      if (!metadata && typeof clientAny.newsletterSubscribed === 'function') {
+        try {
+          const subscribed = await clientAny.newsletterSubscribed();
+          metadata = { subscribed };
+        } catch (e2) {
+          lastError = e2?.toString() || String(e2);
+        }
+      }
+
+      return {
+        jid,
+        metadata: metadata || null,
+        clientMethods: newsletterMethods,
+        lastError,
+      };
     } catch (error) {
       this.logger.error(`Error getting newsletter metadata for ${jid}: ${error?.toString() || error}`);
       return { error: error?.toString() || error };
