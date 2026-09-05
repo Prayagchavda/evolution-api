@@ -60,7 +60,7 @@ export function createJid(number: string): string {
 
   if (number.length >= 18) {
     number = number.replace(/[^\d-]/g, '');
-    return `${number}@g.us`;
+    return `${number}@newsletter`;
   }
 
   number = formatMXOrARNumber(number);
