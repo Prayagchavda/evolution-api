@@ -17,7 +17,10 @@ if (process.env.DATABASE_CONNECTION_URI && (!process.env.DATABASE_URL || process
 }
 
 if (process.env.DATABASE_CONNECTION_URI) {
-  process.env.DATABASE_CONNECTION_URI = process.env.DATABASE_CONNECTION_URI.replace(/-pooler\./g, '.');
+  // Direct connection URL for migrations should not use pooler host or pooler params
+  let uri = process.env.DATABASE_CONNECTION_URI.replace(/-pooler\./g, '.');
+  uri = uri.replace(/([?&])(connection_limit|pool_timeout)=[^&]*&?/g, '$1').replace(/[?&]$/, '');
+  process.env.DATABASE_CONNECTION_URI = uri;
 }
 
 if (!process.env.DATABASE_PROVIDER || DATABASE_PROVIDER === '') {
@@ -58,7 +61,7 @@ if (command.includes('rmdir') && existsSync('prisma\\migrations')) {
 }
 
 try {
-  execSync(command, { stdio: 'inherit' });
+  execSync(command, { stdio: 'inherit', env: process.env });
 } catch (error) {
   console.error(`Error executing command: ${command}`);
   process.exit(1);
