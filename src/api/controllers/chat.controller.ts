@@ -54,6 +54,10 @@ export class ChatController {
     return await this.waMonitor.waInstances[instanceName].fetchContacts(query);
   }
 
+  public async getNewsletterMetadata({ instanceName }: InstanceDto, jid: string) {
+    return await this.waMonitor.waInstances[instanceName].getNewsletterMetadata(jid);
+  }
+
   public async getBase64FromMediaMessage({ instanceName }: InstanceDto, data: getBase64FromMediaMessageDto) {
     return await this.waMonitor.waInstances[instanceName].getBase64FromMediaMessage(data);
   }

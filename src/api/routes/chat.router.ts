@@ -281,6 +281,16 @@ export class ChatRouter extends RouterBroker {
         });
 
         return res.status(HttpStatus.CREATED).json(response);
+      })
+      .post(this.routerPath('newsletterMetadata'), ...guards, async (req, res) => {
+        const response = await this.dataValidate<InstanceDto>({
+          request: req,
+          schema: null,
+          ClassRef: InstanceDto,
+          execute: (instance) => chatController.getNewsletterMetadata(instance, req.body?.jid || req.body?.number),
+        });
+
+        return res.status(HttpStatus.OK).json(response);
       });
   }
 

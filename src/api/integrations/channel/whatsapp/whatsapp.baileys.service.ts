@@ -3517,6 +3517,21 @@ export class BaileysStartupService extends ChannelStartupService {
     });
   }
 
+  // Newsletter Metadata Check
+  public async getNewsletterMetadata(jid: string) {
+    try {
+      if (typeof (this.client as any).newsletterMetadata === 'function') {
+        const metadata = await (this.client as any).newsletterMetadata('jid', jid);
+        this.logger.verbose(`Newsletter Metadata: ${JSON.stringify(metadata)}`);
+        return metadata;
+      }
+      return { warning: 'newsletterMetadata method not available on client' };
+    } catch (error) {
+      this.logger.error(`Error getting newsletter metadata for ${jid}:`, error);
+      return { error: error?.toString() || error };
+    }
+  }
+
   // Chat Controller
   public async whatsappNumber(data: WhatsAppNumberDto) {
     const jids: {
