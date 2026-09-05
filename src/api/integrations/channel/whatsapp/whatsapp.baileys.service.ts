@@ -2642,9 +2642,10 @@ export class BaileysStartupService extends ChannelStartupService {
     }
 
     const isNewsletter = data.number?.includes('@newsletter');
+    const messageContent = isNewsletter ? { text: data.text } : ({ conversation: data.text } as any);
     return await this.sendMessageWithTyping(
       data.number,
-      { conversation: data.text },
+      messageContent,
       {
         delay: data?.delay,
         presence: isNewsletter ? undefined : 'composing',
