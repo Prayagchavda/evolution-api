@@ -4,11 +4,12 @@ const { existsSync } = require('fs');
 
 dotenv.config();
 
-const { DATABASE_PROVIDER } = process.env;
-const databaseProviderDefault = DATABASE_PROVIDER ?? 'postgresql';
+let { DATABASE_PROVIDER } = process.env;
+DATABASE_PROVIDER = (DATABASE_PROVIDER || '').trim(); // normalize whitespace
+const databaseProviderDefault = DATABASE_PROVIDER !== '' ? DATABASE_PROVIDER : 'postgresql';
 
-if (!DATABASE_PROVIDER) {
-  console.warn(`DATABASE_PROVIDER is not set in the .env file, using default: ${databaseProviderDefault}`);
+if (!process.env.DATABASE_PROVIDER || DATABASE_PROVIDER === '') {
+  console.warn(`DATABASE_PROVIDER is not set or is empty; using default: ${databaseProviderDefault}`);
 }
 
 // Função para determinar qual pasta de migrations usar
