@@ -2194,36 +2194,11 @@ export class BaileysStartupService extends ChannelStartupService {
       message['contextInfo'] = contextInfo;
     }
 
-    if (message['text']) {
-      return await this.client.sendMessage(
-        sender,
-        {
-          text: message['text'],
-          mentions,
-          linkPreview: linkPreview,
-          contextInfo: message['contextInfo'],
-        } as unknown as AnyMessageContent,
-        option as unknown as MiscMessageGenerationOptions,
-      );
-    }
-
-    if (message['conversation']) {
-      return await this.client.sendMessage(
-        sender,
-        {
-          text: message['conversation'],
-          mentions,
-          linkPreview: linkPreview,
-          contextInfo: message['contextInfo'],
-        } as unknown as AnyMessageContent,
-        option as unknown as MiscMessageGenerationOptions,
-      );
-    }
-
     if (sender.includes('@newsletter')) {
+      const content = message['text'] || message['conversation'] ? { text: message['text'] || message['conversation'], mentions, linkPreview } : message;
       return await this.client.sendMessage(
         sender,
-        message as unknown as AnyMessageContent,
+        content as unknown as AnyMessageContent,
         option as unknown as MiscMessageGenerationOptions,
       );
     }
