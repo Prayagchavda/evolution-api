@@ -454,6 +454,10 @@ export class ConfigService {
   }
 
   private envProcess(): Env {
+    // Move DATABASE_PROVIDER parsing outside of the returned object to avoid statements inside an object literal
+    const rawDbProvider = process.env?.DATABASE_PROVIDER;
+    const dbProvider = rawDbProvider ? rawDbProvider.trim() : '';
+
     return {
       SERVER: {
         NAME: process.env?.SERVER_NAME || 'evolution',
@@ -481,14 +485,12 @@ export class ConfigService {
         PREFIX: process.env?.PROVIDER_PREFIX || 'evolution',
       },
       DATABASE: {
-        const rawDbProvider = process.env?.DATABASE_PROVIDER,
-        const dbProvider = rawDbProvider ? rawDbProvider.trim() : '',
-        // PROVIDER: dbProvider !== '' ? dbProvider : 'postgresql',
+        PROVIDER: dbProvider !== '' ? dbProvider : 'postgresql',
         CONNECTION: {
           URI: process.env.DATABASE_CONNECTION_URI || '',
           CLIENT_NAME: process.env.DATABASE_CONNECTION_CLIENT_NAME || 'evolution',
         },
-        PROVIDER:  dbProvider !== '' ? dbProvider : 'postgresql',
+        // PROVIDER: process.env.DATABASE_PROVIDER || 'postgresql',
         SAVE_DATA: {
           INSTANCE: process.env?.DATABASE_SAVE_DATA_INSTANCE === 'true',
           NEW_MESSAGE: process.env?.DATABASE_SAVE_DATA_NEW_MESSAGE === 'true',
