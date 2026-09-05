@@ -10,6 +10,8 @@ DATABASE_PROVIDER=${DATABASE_PROVIDER:-postgresql}
 if [[ "$DATABASE_PROVIDER" == "postgresql" || "$DATABASE_PROVIDER" == "mysql" || "$DATABASE_PROVIDER" == "psql_bouncer" ]]; then
     export DATABASE_URL="${DATABASE_URL:-$DATABASE_CONNECTION_URI}"
     export DATABASE_CONNECTION_URI="${DATABASE_CONNECTION_URI:-$DATABASE_URL}"
+    # Ensure migration URL uses direct non-pooled endpoint (remove -pooler) to allow advisory lock
+    export DATABASE_CONNECTION_URI=$(echo "$DATABASE_CONNECTION_URI" | sed 's/-pooler\././g')
     echo "Deploying migrations for $DATABASE_PROVIDER"
     echo "Database URL: $DATABASE_URL"
     # rm -rf ./prisma/migrations
