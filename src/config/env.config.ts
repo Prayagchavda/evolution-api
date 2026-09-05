@@ -481,14 +481,14 @@ export class ConfigService {
         PREFIX: process.env?.PROVIDER_PREFIX || 'evolution',
       },
       DATABASE: {
-        const rawDbProvider = process.env?.DATABASE_PROVIDER;
-        const dbProvider = rawDbProvider ? rawDbProvider.trim() : '';
-        PROVIDER: dbProvider !== '' ? dbProvider : 'postgresql',
+        const rawDbProvider = process.env?.DATABASE_PROVIDER,
+        const dbProvider = rawDbProvider ? rawDbProvider.trim() : '',
+        // PROVIDER: dbProvider !== '' ? dbProvider : 'postgresql',
         CONNECTION: {
           URI: process.env.DATABASE_CONNECTION_URI || '',
           CLIENT_NAME: process.env.DATABASE_CONNECTION_CLIENT_NAME || 'evolution',
         },
-        // PROVIDER: process.env.DATABASE_PROVIDER || 'postgresql',
+        PROVIDER:  dbProvider !== '' ? dbProvider : 'postgresql',
         SAVE_DATA: {
           INSTANCE: process.env?.DATABASE_SAVE_DATA_INSTANCE === 'true',
           NEW_MESSAGE: process.env?.DATABASE_SAVE_DATA_NEW_MESSAGE === 'true',
