@@ -2394,6 +2394,14 @@ export class BaileysStartupService extends ChannelStartupService {
           group?.ephemeralDuration,
           // group?.participants,
         );
+      } else if (sender.includes('@newsletter')) {
+        messageSent = await this.sendMessage(
+          sender,
+          message,
+          mentions,
+          linkPreview,
+          quoted,
+        );
       } else {
         contextInfo = {
           mentionedJid: [],
