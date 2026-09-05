@@ -2196,8 +2196,10 @@ export class BaileysStartupService extends ChannelStartupService {
 
     if (sender.includes('@newsletter')) {
       const textContent =
-        typeof message === 'object' && (message['text'] || message['conversation'])
-          ? (message['text'] || message['conversation'])
+        typeof message === 'string'
+          ? message
+          : typeof message === 'object' && (message['text'] || message['conversation'])
+          ? message['text'] || message['conversation']
           : null;
 
       if (textContent) {
@@ -2206,6 +2208,7 @@ export class BaileysStartupService extends ChannelStartupService {
           { conversation: textContent },
           { userJid: this.instance.wuid },
         );
+        waMsg.key.participant = undefined;
         await this.client.relayMessage(sender, waMsg.message, { messageId: waMsg.key.id });
         return waMsg;
       }
