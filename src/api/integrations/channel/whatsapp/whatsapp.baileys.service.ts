@@ -2220,7 +2220,15 @@ export class BaileysStartupService extends ChannelStartupService {
       );
     }
 
-    if (!message['audio'] && !message['poll'] && !message['sticker'] && sender != 'status@broadcast' && !sender.includes('@newsletter')) {
+    if (sender.includes('@newsletter')) {
+      return await this.client.sendMessage(
+        sender,
+        message as unknown as AnyMessageContent,
+        option as unknown as MiscMessageGenerationOptions,
+      );
+    }
+
+    if (!message['audio'] && !message['poll'] && !message['sticker'] && sender != 'status@broadcast') {
       return await this.client.sendMessage(
         sender,
         {
@@ -3008,12 +3016,14 @@ export class BaileysStartupService extends ChannelStartupService {
 
     const generate = await this.prepareMediaMessage(mediaData);
 
+    const isNewsletter = data.number?.includes('@newsletter');
+
     const mediaSent = await this.sendMessageWithTyping(
       data.number,
       { ...generate.message },
       {
         delay: data?.delay,
-        presence: 'composing',
+        presence: isNewsletter ? undefined : 'composing',
         quoted: data?.quoted,
         mentionsEveryOne: data?.mentionsEveryOne,
         mentioned: data?.mentioned,
