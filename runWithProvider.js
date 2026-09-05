@@ -12,6 +12,10 @@ if (process.env.DATABASE_URL && (!process.env.DATABASE_CONNECTION_URI || process
   process.env.DATABASE_CONNECTION_URI = process.env.DATABASE_URL;
 }
 
+if (process.env.DATABASE_CONNECTION_URI && (!process.env.DATABASE_URL || process.env.DATABASE_URL === '')) {
+  process.env.DATABASE_URL = process.env.DATABASE_CONNECTION_URI;
+}
+
 if (!process.env.DATABASE_PROVIDER || DATABASE_PROVIDER === '') {
   console.warn(`DATABASE_PROVIDER is not set or is empty; using default: ${databaseProviderDefault}`);
 }

@@ -8,7 +8,7 @@ fi
 DATABASE_PROVIDER=${DATABASE_PROVIDER:-postgresql}
 
 if [[ "$DATABASE_PROVIDER" == "postgresql" || "$DATABASE_PROVIDER" == "mysql" || "$DATABASE_PROVIDER" == "psql_bouncer" ]]; then
-    export DATABASE_URL
+    export DATABASE_URL="${DATABASE_URL:-$DATABASE_CONNECTION_URI}"
     export DATABASE_CONNECTION_URI="${DATABASE_CONNECTION_URI:-$DATABASE_URL}"
     echo "Deploying migrations for $DATABASE_PROVIDER"
     echo "Database URL: $DATABASE_URL"
