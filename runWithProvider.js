@@ -8,6 +8,10 @@ let { DATABASE_PROVIDER } = process.env;
 DATABASE_PROVIDER = (DATABASE_PROVIDER || '').trim(); // normalize whitespace
 const databaseProviderDefault = DATABASE_PROVIDER !== '' ? DATABASE_PROVIDER : 'postgresql';
 
+if (process.env.DATABASE_URL && (!process.env.DATABASE_CONNECTION_URI || process.env.DATABASE_CONNECTION_URI === '')) {
+  process.env.DATABASE_CONNECTION_URI = process.env.DATABASE_URL;
+}
+
 if (!process.env.DATABASE_PROVIDER || DATABASE_PROVIDER === '') {
   console.warn(`DATABASE_PROVIDER is not set or is empty; using default: ${databaseProviderDefault}`);
 }
