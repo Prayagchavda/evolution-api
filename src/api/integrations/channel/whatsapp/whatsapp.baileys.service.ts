@@ -2288,13 +2288,13 @@ export class BaileysStartupService extends ChannelStartupService {
     options?: Options,
     isIntegration = false,
   ) {
-    const isWA = (await this.whatsappNumber({ numbers: [number] }))?.shift();
+    const isNewsletter = number?.includes('@newsletter');
+    const isWA = isNewsletter ? null : (await this.whatsappNumber({ numbers: [number] }))?.shift();
+    const sender = isNewsletter ? number.toLowerCase() : isWA?.jid?.toLowerCase();
 
-    if (!isWA.exists && !isJidGroup(isWA.jid) && !isWA.jid.includes('@broadcast') && !isWA.jid.includes('@newsletter')) {
+    if (!isNewsletter && (!isWA || (!isWA.exists && !isJidGroup(isWA.jid) && !isWA.jid.includes('@broadcast')))) {
       throw new BadRequestException(isWA);
     }
-
-    const sender = isWA.jid.toLowerCase();
 
     this.logger.verbose(`Sending message to ${sender}`);
 
