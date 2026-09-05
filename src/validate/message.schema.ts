@@ -22,6 +22,7 @@ const isNotEmpty = (...propertyNames: string[]): JSONSchema7 => {
 
 const numberDefinition: JSONSchema7Definition = {
   type: 'string',
+  pattern: '^[0-9A-Za-z@._-]+$',
   description: 'Invalid format',
 };
 
