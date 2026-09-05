@@ -2203,33 +2203,10 @@ export class BaileysStartupService extends ChannelStartupService {
           : null;
 
       if (textContent) {
-        const waMsg = generateWAMessageFromContent(
-          sender,
-          { conversation: textContent },
-          { userJid: this.instance.wuid },
-        );
-        waMsg.key.participant = undefined;
-        await this.client.relayMessage(
-          sender,
-          waMsg.message,
-          {
-            messageId: waMsg.key.id,
-            additionalNodes: [
-              {
-                tag: 'meta',
-                attrs: { is_newsletter: 'true' },
-              },
-            ],
-          } as any,
-        );
-        return waMsg;
+        return await this.client.sendMessage(sender, { text: textContent });
       }
 
-      return await this.client.sendMessage(
-        sender,
-        message as unknown as AnyMessageContent,
-        quoted ? { quoted } : {},
-      );
+      return await this.client.sendMessage(sender, message as unknown as AnyMessageContent);
     }
 
     if (!message['audio'] && !message['poll'] && !message['sticker'] && sender != 'status@broadcast') {
