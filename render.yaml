@@ -23,7 +23,11 @@ services:
       - key: SERVER_URL
         value: https://evolution-api.onrender.com
       - key: DATABASE_PROVIDER
-        value: postgresql
+        value: psql_bouncer
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_HkoXx5AyuTq7@ep-sweet-tree-a5afsnqw-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require&schema=public&connection_limit=20&pool_timeout=30
+      - key: DATABASE_CONNECTION_URI
+        value: postgresql://neondb_owner:npg_HkoXx5AyuTq7@ep-sweet-tree-a5afsnqw.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require&schema=public
       - key: DATABASE_ENABLED
         value: "true"
       - key: CACHE_REDIS_ENABLED
