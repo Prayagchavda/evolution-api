@@ -2195,11 +2195,15 @@ export class BaileysStartupService extends ChannelStartupService {
     }
 
     if (sender.includes('@newsletter')) {
-      const content = message['text'] || message['conversation'] ? { text: message['text'] || message['conversation'], mentions, linkPreview } : message;
+      const content =
+        typeof message === 'object' && (message['text'] || message['conversation'])
+          ? { text: message['text'] || message['conversation'] }
+          : message;
+      const newsletterOptions: MiscMessageGenerationOptions = quoted ? { quoted } : {};
       return await this.client.sendMessage(
         sender,
         content as unknown as AnyMessageContent,
-        option as unknown as MiscMessageGenerationOptions,
+        newsletterOptions,
       );
     }
 
