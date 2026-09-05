@@ -1,10 +1,11 @@
 #!/bin/bash
 
-source ./Docker/scripts/env_functions.sh
-
 if [ "$DOCKER_ENV" != "true" ]; then
+    source ./Docker/scripts/env_functions.sh
     export_env_vars
 fi
+
+DATABASE_PROVIDER=${DATABASE_PROVIDER:-postgresql}
 
 if [[ "$DATABASE_PROVIDER" == "postgresql" || "$DATABASE_PROVIDER" == "mysql" || "$DATABASE_PROVIDER" == "psql_bouncer" ]]; then
     export DATABASE_URL
