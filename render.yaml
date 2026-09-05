@@ -1,4 +1,15 @@
 services:
+  # Redis Private Service
+  - type: pserv
+    name: evolution-redis
+    runtime: image
+    image:
+      url: redis:alpine
+    region: ohio
+    plan: free
+    ipAllowList: [] # Private network only
+
+  # Evolution API Web Service
   - type: web
     name: evolution-api
     runtime: docker
@@ -11,24 +22,32 @@ services:
         generateValue: true
       - key: SERVER_URL
         value: https://evolution-api.onrender.com
+      - key: DATABASE_PROVIDER
+        value: postgresql
       - key: DATABASE_ENABLED
-        value: false
+        value: "true"
+      - key: CACHE_REDIS_ENABLED
+        value: "true"
+      - key: CACHE_REDIS_URI
+        value: redis://evolution-redis:6379
+      - key: CACHE_LOCAL_ENABLED
+        value: "true"
       - key: LOG_LEVEL
         value: ERROR,WARN,DEBUG,INFO
       - key: LOG_COLOR
-        value: true
+        value: "true"
       - key: DEL_INSTANCE
-        value: false
+        value: "false"
       - key: STORE_MESSAGES
-        value: true
+        value: "true"
       - key: STORE_CONTACTS
-        value: true
+        value: "true"
       - key: STORE_CHATS
-        value: true
+        value: "true"
       - key: CORS_ORIGIN
         value: "*"
       - key: CORS_METHODS
         value: POST,GET,PUT,DELETE
       - key: CORS_CREDENTIALS
-        value: true
+        value: "true"
     healthCheckPath: /
